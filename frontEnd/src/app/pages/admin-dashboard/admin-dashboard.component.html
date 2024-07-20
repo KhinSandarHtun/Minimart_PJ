@@ -1,0 +1,269 @@
+<ul class="d-flex flex-row justify-content-center mt-4 custom-list">
+  <li
+    (click)="pageName = 'products'"
+    class="list-item d-flex flex-column align-items-center px-4"
+    [ngClass]="{
+      active: pageName == 'products',
+      'text-success': pageName == 'products',
+      'text-info': pageName != 'products'
+    }"
+  >
+    <i class="bi bi-basket"></i>
+  </li>
+  <li
+    (click)="pageName = 'users'"
+    class="list-item d-flex flex-column align-items-center px-4"
+    [ngClass]="{
+      active: pageName == 'users',
+      'text-success': pageName == 'users',
+      'text-info': pageName !== 'users'
+    }"
+  >
+    <i class="bi bi-people"></i>
+  </li>
+  <li
+    (click)="pageName = 'chart'"
+    class="list-item d-flex flex-column align-items-center px-4"
+    [ngClass]="{
+      active: pageName == 'chart',
+      'text-success': pageName == 'chart',
+      'text-info': pageName != 'chart'
+    }"
+  >
+    <i class="bi bi-graph-up-arrow"></i>
+  </li>
+</ul>
+
+<div [ngSwitch]="pageName" class="container">
+  <div *ngSwitchCase="'products'" class="m-3">
+    <h3>Products in Shop</h3>
+
+    <div class="row">
+      <div class="col-12 col-md-3 mb-3">
+        <input
+          #query
+          (input)="filter(query.value)"
+          [(ngModel)]="searchQuery"
+          type="text"
+          class="form-control"
+          placeholder="search..."
+        />
+      </div>
+      <a
+        routerLink="/admin/add-product"
+        class="btn btn-success col-12 col-md-2 col-lg-2 mb-3"
+        >Add Product</a
+      >
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover shadow-sm" style="min-width: 1000px">
+        <thead>
+          <tr>
+            <th style="width: 3%" scope="col">#</th>
+            <th
+              style="width: 10%"
+              scope="col"
+              sortable="id"
+              (sort)="onSort($event)"
+            >
+              Id
+            </th>
+            <th
+              style="width: 50%"
+              scope="col"
+              sortable="title"
+              (sort)="onSort($event)"
+            >
+              Title
+            </th>
+            <th
+              style="width: 10%"
+              scope="col"
+              sortable="price"
+              (sort)="onSort($event)"
+            >
+              Price
+            </th>
+            <th
+              style="width: 10%"
+              scope="col"
+              sortable="category"
+              (sort)="onSort($event)"
+            >
+              Category
+            </th>
+            <th style="width: 30%" scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="clickable-row" *ngFor="let product of filteredProduct()">
+            <th>{{ product.index }}</th>
+            <td scope="row">{{ product.id }}</td>
+            <td (click)="editProduct(product)">
+              <img
+                [src]="product.imageUrl"
+                class="me-2"
+                style="width: 50px; height: 50px; border-radius: 50%"
+              />
+              {{ product.title }}
+            </td>
+            <td>{{ product.price | currency: "USD" }}</td>
+            <td>{{ util.searchCategory(product.category, category) }}</td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-light"
+                (click)="editProduct(product)"
+              >
+                <i class="bi bi-pencil-square text-success"></i>
+              </button>
+              <button
+                #deleteBtn
+                type="button"
+                class="btn btn-light ms-2"
+                (click)="deleteProduct(product, deleteBtn)"
+              >
+                <span *ngIf="!util.isLoading(deleteBtn)"
+                  ><i class="bi bi-trash text-danger"></i
+                ></span>
+                <span *ngIf="util.isLoading(deleteBtn)">
+                  <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div
+      class="d-flex justify-content-between p-2"
+      *ngIf="products && products.length"
+    >
+      <ngb-pagination
+        [collectionSize]="products.length"
+        [(page)]="page"
+        [pageSize]="pageSize"
+      >
+      </ngb-pagination>
+
+      <select class="form-select" style="width: auto" [(ngModel)]="pageSize">
+        <option [ngValue]="products.length">All items</option>
+        <option [ngValue]="2">2 items per page</option>
+        <option [ngValue]="4">4 items per page</option>
+        <option [ngValue]="6">6 items per page</option>
+      </select>
+    </div>
+  </div>
+
+  <div *ngSwitchCase="'users'" class="m-3">
+    <h3>Users List</h3>
+
+    <div class="table-responsive">
+      <table class="table table-hover shadow-sm" style="min-width: 500px">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Type</th>
+            <th scope="col">Promote/Demote</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.index }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.type }}</td>
+            <td>
+              <button
+                class="btn btn-light text-success"
+                *ngIf="user.type == 'User'"
+                (click)="promoteUser(user)"
+                [disabled]="isCurrentUser(user)"
+              >
+                Promote <i class="bi bi-caret-up"></i>
+              </button>
+              <button
+                class="btn btn-light text-danger"
+                *ngIf="user.type == 'Admin'"
+                (click)="demoteAdmin(user)"
+                [disabled]="isCurrentUser(user)"
+              >
+                Demote <i class="bi bi-caret-down"></i>
+              </button>
+            </td>
+
+            <td>
+              <button
+                class="btn btn-light"
+                (click)="deleteConfirm(user, deleteuser, confirmModel)"
+                #deleteuser
+                [disabled]="user.type == 'Admin'"
+              >
+                <span *ngIf="!util.isLoading(deleteuser)"
+                  ><i class="bi bi-trash text-danger"></i
+                ></span>
+                <span *ngIf="util.isLoading(deleteuser)">
+                  <div
+                    class="spinner-border spinner-border-sm text-danger"
+                    role="status"
+                  >
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div *ngSwitchCase="'chart'" class="m-3">
+    <h3>Chart</h3>
+    <app-line-chart [customChartData]="customChartData"></app-line-chart>
+  </div>
+</div>
+
+<ng-template #confirmModel let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-title">Profile deletion</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-describedby="modal-title"
+      (click)="modal.dismiss()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <p>
+      <strong
+        >Are you sure you want to delete
+        <span class="text-primary">"{{ deleteUserName }}"</span>
+        account?</strong
+      >
+    </p>
+    <p>
+      All information associated to this user will be permanently deleted.
+      <span class="text-danger">This operation can not be undone.</span>
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="modal.dismiss()"
+    >
+      Cancel
+    </button>
+    <button type="button" class="btn btn-danger" (click)="modal.close()">
+      Ok
+    </button>
+  </div>
+</ng-template>

@@ -1,0 +1,40 @@
+<form class="login-form" *ngIf="tokenValid == 'valid'">
+  <h3 class="mb-3">Please reset your password</h3>
+  <div class="form-group mb-3">
+    <label class="mb-2" for="new_password">New Password</label>
+    <input
+      name="new_password"
+      type="password"
+      class="form-control"
+      (input)="formErr = []"
+      [(ngModel)]="new_password"
+    />
+  </div>
+  <div class="form-group mb-3">
+    <label class="mb-2" for="password_confirm">Confirm Password </label>
+    <input
+      name="password_confirm"
+      type="password"
+      class="form-control"
+      (input)="formErr = []"
+      [(ngModel)]="password_confirm"
+    />
+  </div>
+  <div class="btn-container">
+    <button class="btn btn-dark" (click)="reset()">Submit</button>
+  </div>
+</form>
+
+<div class="info-card" *ngIf="tokenValid == 'unknown'">
+  <div class="text-center fs-3">
+    Checking Reset Token
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</div>
+<div class="info-card" *ngIf="tokenValid == 'not-valid'">
+  <div class="text-center fs-3 text-danger">
+    <i class="bi bi-exclamation-circle-fill"></i> Invalid link or expired
+  </div>
+</div>

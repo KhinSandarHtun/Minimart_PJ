@@ -1,0 +1,58 @@
+<div class="container">
+  <div class="card border-0 my-5">
+    <div class="container-fliud">
+      <div class="wrapper row">
+        <div class="col-md-6 d-flex justify-content-center align-items-center">
+          <img
+            [src]="product.imageUrl"
+            style="width: 80%; max-height: 500px; object-fit: cover"
+          />
+        </div>
+
+        <div class="details col-md-6 p-3">
+          <a routerLink="/categories" class="home-link"
+            >Back to Category page</a
+          >
+          <h2 class="product-title my-3">{{ product.title }}</h2>
+          <p class="mb-3"><strong>Category: </strong> {{ product.category }}</p>
+
+          <div class="product-description mb-3" *ngIf="product.detail">
+            <p class="fs-4">Description</p>
+            <p class="text-muted" [innerText]="product.detail || ''"></p>
+          </div>
+          <p class="price">{{ product.price | currency: "USD" }}</p>
+          <form>
+            <div class="form-group row mt-2">
+              <div class="col-md-3">
+                <label for="amount">Select Amounts</label>
+                <input
+                  type="number"
+                  name="amount"
+                  id="amount"
+                  class="form-control"
+                  step="1"
+                  min="0"
+                  max="100"
+                  [formControl]="productAmount"
+                />
+              </div>
+            </div>
+          </form>
+
+          <div class="action mt-4">
+            <button class="btn btn-success" type="button" (click)="addItem()">
+              add to cart
+            </button>
+
+            <span class="favorite" (click)="isFavorite = !isFavorite">
+              <span *ngIf="isFavorite"><fa-icon icon="heart"></fa-icon></span>
+              <span *ngIf="!isFavorite"
+                ><fa-icon icon="heart-broken"></fa-icon
+              ></span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,108 @@
+<section class="container mt-2">
+  <div class="container-fluid">
+    <ngb-carousel style="cursor: pointer">
+      <ng-template ngbSlide *ngFor="let image of bannerproducts">
+        <div class="wrapper" routerLink="/promotion">
+          <img [src]="image.imageUrl" alt="Random first slide" />
+        </div>
+        <div class="carousel-caption">
+          <h3>{{ image.title }}</h3>
+        </div>
+      </ng-template>
+    </ngb-carousel>
+  </div>
+
+  <section class="feature">
+    <h3>Features Categories</h3>
+    <div class="slick-wrapper">
+      <ngx-slick-carousel
+        class="carousel"
+        #slickModal="slick-carousel"
+        [config]="slideConfig"
+        (init)="slickInit($event)"
+        (breakpoint)="breakpoint($event)"
+      >
+        <div
+          ngxSlickItem
+          *ngFor="let category of categories"
+          class="slide"
+          (click)="goToCategory(category)"
+        >
+          <div class="card category-card" style="height: 300px">
+            <div class="card-body m-auto text-center">
+              <img
+                class="card-img-top mb-3"
+                [src]="category.imageUrl"
+                [alt]="category.title"
+                width="80%"
+                height="70%"
+              />
+              <div class="fs-4">{{ category.title | titlecase }}</div>
+            </div>
+          </div>
+        </div>
+      </ngx-slick-carousel>
+    </div>
+  </section>
+
+  <section class="discount">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-6 mb-3 mb-lg-0">
+          <div>
+            <div
+              class="px-3 py-5 rounded-3"
+              style="
+                background: url(https://freshcart.codescandy.com/assets/images/banner/grocery-banner.png)
+                  no-repeat;
+                background-size: cover;
+                background-position: center;
+              "
+            >
+              <div>
+                <h3 class="fw-bold mb-1">Fruits &amp; Vegetables</h3>
+                <p class="mb-4">
+                  Get <span class="fw-bold">30%</span> Off Today
+                </p>
+                <a class="btn btn-success" routerLink="/promotion">Shop Now</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div>
+            <div
+              class="px-3 py-5 rounded-3"
+              style="
+                background: url(https://freshcart.codescandy.com/assets/images/banner/grocery-banner-2.jpg)
+                  no-repeat;
+                background-size: cover;
+                background-position: center;
+              "
+            >
+              <div>
+                <h3 class="fw-bold mb-1">Freshly Baked Buns</h3>
+                <p class="mb-4">
+                  Get <span class="fw-bold">25%</span> Off Today
+                </p>
+                <a routerLink="/promotion" class="btn btn-success">Shop Now</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section
+    class="popular-ttl mb-5"
+    *ngIf="popularProduct && popularProduct.length"
+  >
+    <h3 class="popular-ttl">Popular Products</h3>
+    <div class="row g-4 row-cols-lg-4 row-cols-2 row-cols-md-3">
+      <div class="col-12" *ngFor="let product of popularProduct">
+        <app-item-card [cardItem]="product"></app-item-card>
+      </div>
+    </div>
+  </section>
+</section>

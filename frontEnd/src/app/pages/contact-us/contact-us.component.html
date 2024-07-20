@@ -1,0 +1,64 @@
+<div class="container py-0 py-sm-5">
+  <div class="row mb-5">
+    <div class="col-12 col-md-5 mb-5 mb-md-0">
+      <p class="fs-2 my-5 text-uppercase">
+        <span class="border-bottom border-dark">Help & Contact</span>
+      </p>
+      <small class="text-muted fs-6">
+        Before reaching out to our team, you may want to review these helpful
+        resources in case your question has already been answered.
+      </small>
+      <h3 class="mt-3 fs-2 mb-3 mt-5">Our Headquarters</h3>
+      <p class="text-muted fs-5">
+        4380 Wilson Street, Suite 300<br />
+        Burlington, VT 80237<br />
+        Monday – Friday 9am-4:30pm
+      </p>
+    </div>
+    <div class="col-12 col-md-7 mt-5">
+      <div class="row">
+        <div class="col-md-8 col-12 m-lg-0">
+          <h3 class="fs-2 mb-3 text-uppercase">Contact Us</h3>
+
+          <form [formGroup]="form" (submit)="onSubmit($event)">
+            <div class="form-group mb-3">
+              <label class="mb-1" for="name">Email</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                formControlName="mail"
+                (input)="formErr = []"
+              />
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="mb-1" for="details">Your Details</label>
+              <textarea
+                class="form-control"
+                rows="3"
+                id="details"
+                formControlName="details"
+                (input)="formErr = []"
+              ></textarea>
+            </div>
+
+            <button
+              class="btn btn-primary"
+              type="submit"
+              [disabled]="formStatus == 'Submitting...'"
+            >
+              Submit</button
+            ><br />
+            <small class="text-muted" [innerHtml]="formStatus"></small>
+            <ul class="mt-3">
+              <li class="text-danger" *ngFor="let err of formErr">
+                {{ err }}
+              </li>
+            </ul>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

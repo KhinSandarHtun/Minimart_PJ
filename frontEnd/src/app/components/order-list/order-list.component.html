@@ -1,0 +1,31 @@
+<td>{{ order.index }}</td>
+<td>{{ order.created_user_id.name }}</td>
+<td>{{ order.date }}</td>
+<td>{{ timer }}</td>
+
+<td>
+  <select
+    class="form-select"
+    aria-label="Delivery Status"
+    #select
+    [(ngModel)]="order.order_status"
+    [style]="styleChange(select)"
+    (change)="onChange()"
+  >
+    <option class="option-list" value="pending">pending</option>
+    <option class="option-list" value="shipping">shipping</option>
+    <option class="option-list" value="arrive">arrive</option>
+    <option class="option-list" value="cancel">cancel</option>
+  </select>
+</td>
+<td>
+  <a class="btn btn-light" [routerLink]="orderLink">
+    <td>
+      <i class="bi bi-box-arrow-in-right"></i>
+    </td>
+  </a>
+
+  <button *ngIf="isTimeout" class="btn btn-light no-border text-danger ms-3" (click)="deleteOrder()">
+    <i class="bi bi-trash"></i>
+  </button>
+</td>

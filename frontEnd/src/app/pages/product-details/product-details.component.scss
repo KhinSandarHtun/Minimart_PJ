@@ -1,0 +1,41 @@
+.home-link {
+  color: #000;
+  text-decoration: none;
+  transition: 0.6s;
+}
+
+.home-link::after {
+  padding-left: 10px;
+  content: "→";
+  transition: 0.6s;
+}
+
+.home-link:hover {
+  opacity: 0.5;
+}
+.home-link:hover::after {
+  padding-left: 15px;
+}
+
+.price {
+  color: rgb(56, 190, 87);
+  font-size: 30px;
+}
+
+.btn {
+  width: 40%;
+}
+
+.favorite {
+  display: inline-block;
+  margin-left: 20px;
+  padding: 2px 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: 0.6s;
+}
+
+.favorite:hover {
+  border: 1px solid #ccc;
+  background-color: rgba(204, 204, 204, 0.5);
+}

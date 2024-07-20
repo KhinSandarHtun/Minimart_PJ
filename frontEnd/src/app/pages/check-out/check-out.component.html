@@ -1,0 +1,240 @@
+<div class="container my-5">
+  <div *ngIf="!confirmOrder" class="row">
+    <div class="col-md-4 order-md-2 mb-4">
+      <h4 class="mb-3">
+        <span class="text-muted mr-3">Your cart</span>
+        <span class="badge badge-secondary text-bg-secondary ms-3">{{
+          totalCartItem()
+        }}</span>
+      </h4>
+      <ul class="list-group mb-3">
+        <li
+          *ngFor="let item of cartItem"
+          class="list-group-item d-flex justify-content-between align-items-center lh-condensed"
+        >
+          <span class="text-muted col-1">{{ item.amount }}x</span>
+          <div class="col-8">
+            <h6 class="my-0">{{ item.title }}</h6>
+            <small class="text-muted">{{ item.category }}</small>
+          </div>
+
+          <span class="text-muted col-3 text-end me-1">{{
+            item.price | currency: "USD"
+          }}</span>
+        </li>
+
+        <!--<li
+          *ngIf="hasPromo"
+          class="list-group-item d-flex justify-content-between bg-light"
+        >
+          <div class="text-success">
+            <h6 class="my-0">Promo code</h6>
+            <small> {{ discount }}%&nbsp;PROMOCODE</small>
+          </div>
+          <span class="text-success">-{{ discountPrice | currency }}</span>
+        </li>-->
+
+        <li class="list-group-item d-flex justify-content-between">
+          <span>Total (USD)</span>
+          <strong> {{ totalPrice() | currency: "USD" }} </strong>
+        </li>
+      </ul>
+
+      <!--<form class="p-2">
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Promo code eg: 10%promo"
+            #promocode
+            name="promocode"
+          />
+          <div class="input-group-append">
+            <button
+              type="submit"
+              class="btn btn-secondary"
+              (click)="redeem(promocode.value)"
+            >
+              Redeem
+            </button>
+          </div>
+        </div>
+      </form>-->
+    </div>
+    <div class="col-md-8 order-md-1">
+      <h4 class="mb-3">Billing address</h4>
+      <form [formGroup]="form" class="needs-validation" novalidate>
+        <div class="mb-3">
+          <label for="address">Address 1</label>
+          <input
+            type="text"
+            class="form-control"
+            id="address"
+            placeholder="1234 Main St"
+            required=""
+            formControlName="address1"
+          />
+          <div
+            *ngIf="form.get('address1')?.touched && form.get('address1')?.errors?.['required']"
+            class="invalid-feedback"
+          >
+            Please enter your shipping address.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="address2"
+            >Address 2 <span class="text-muted">(Optional)</span></label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="address2"
+            placeholder="Apartment or suite"
+            formControlName="address2"
+          />
+        </div>
+
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="city">City</label>
+            <input type="text" class="form-control" formControlName="city" />
+            <div
+              *ngIf="form.get('city')?.touched && form.get('city')?.errors?.['required']"
+              class="invalid-feedback"
+            >
+              City is required.
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="state">State</label>
+            <input type="text" class="form-control" formControlName="state" />
+            <div
+              *ngIf="form.get('state')?.touched && form.get('state')?.errors?.['required']"
+              class="invalid-feedback"
+            >
+              Please provide a state.
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="country">Country</label>
+            <input
+              type="text"
+              class="form-control"
+              id="country"
+              formControlName="country"
+            />
+            <div
+              *ngIf="form.get('country')?.touched && form.get('country')?.errors?.['required']"
+              class="invalid-feedback"
+            >
+              Country required.
+            </div>
+          </div>
+          <div class="col-md-2 mb-3">
+            <label for="zip">Zip</label>
+            <input
+              type="text"
+              class="form-control"
+              id="zip"
+              formControlName="zip"
+            />
+            <div
+              *ngIf="form.get('zip')?.touched && form.get('zip')?.errors?.['required']"
+              class="invalid-feedback"
+            >
+              Zip code required.
+            </div>
+          </div>
+        </div>
+        <hr class="mb-4" />
+
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="same-address"
+            formControlName="sameaddress"
+          />
+          <label class="form-check-label" for="same-address">
+            Shipping address is the same as my billing address
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            id="save-info"
+            formControlName="remember"
+          />
+          <label class="form-check-label" for="save-info">
+            Save this information for next time
+          </label>
+        </div>
+        <hr class="mb-4" />
+
+        <h4 class="mb-3">Payment</h4>
+
+        <div class="d-block my-3">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="payment"
+              id="kbzpay"
+              value="kbzpay"
+              formControlName="payment"
+            />
+            <label class="form-check-label" for="kbzpay"> KBZPay </label>
+          </div>
+
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="payment"
+              id="wavepay"
+              value="wavepay"
+              formControlName="payment"
+            />
+            <label class="form-check-label" for="wavepay"> WavePay </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="payment"
+              id="cashondelivery"
+              value="cashondelivery"
+              formControlName="payment"
+            />
+            <label class="form-check-label" for="cashondelivery">
+              Cash on Delivery
+            </label>
+          </div>
+          <div
+            *ngIf="form.get('payment')?.touched && form.get('payment')?.errors?.['required']"
+            class="invalid-feedback"
+          >
+            Payment method is required
+          </div>
+        </div>
+        <hr class="mb-4" />
+        <button
+          class="btn btn-primary btn-lg btn-block"
+          type="submit"
+          [disabled]="form.invalid"
+          (click)="onSubmit()"
+        >
+          Place Order
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div *ngIf="confirmOrder" class="second-container">
+    <h1>Thanks You!</h1>
+    <p>We received your order and will process it within the next 24hours!</p>
+  </div>
+</div>

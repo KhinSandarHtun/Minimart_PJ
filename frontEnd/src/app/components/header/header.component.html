@@ -1,0 +1,229 @@
+<div class="sticky-top bg-light">
+  <div class="container">
+    <div class="d-flex justify-content-between px-3 py-3">
+      <p class="h3 text-sm-h5 d-none d-sm-inline">
+        <a class="nav-link text-success" routerLink="/">Everything Shop</a>
+      </p>
+      <p class="h3 text-sm-h5 d-sm-none d-md-none d-lg-none d-xl-none">
+        <a class="nav-link text-success" routerLink="/">EShop</a>
+      </p>
+      <div
+        class="d-md-none d-lg-none d-xl-none d-flex justify-content-center align-items-center"
+      >
+        <div class="me-3" (click)="openSearch(searchModel)">
+          <i class="bi h4 bi-search"></i>
+        </div>
+        <div class="me-3" (click)="openCart(cartCanvas)">
+          <i
+            class="bi h3"
+            [class]="
+              cartItem && cartItem.length ? 'bi-cart-check' : 'bi-cart-dash'
+            "
+          ></i>
+        </div>
+        <div (click)="openBurgurMenu(burgur)">
+          <i class="bi h3" [class]="burgurMenu ? 'bi-x-lg' : 'bi-list'"></i>
+        </div>
+      </div>
+      <ul class="nav justify-content-end d-none d-md-flex">
+        <li class="nav-item" *ngFor="let navItem of getNav()">
+          <a class="nav-link" [routerLink]="navItem.route">{{
+            navItem.name
+          }}</a>
+        </li>
+        <div ngbDropdown class="d-inline-block" *ngIf="isLoggedIn()">
+          <button type="button" class="btn" ngbDropdownToggle>
+            Hello, {{ getCurrentUser().name.split(" ")[0] }}
+          </button>
+          <div ngbDropdownMenu aria-labelledby="admin">
+            <a
+              ngbDropdownItem
+              [routerLink]="'/profile/' + getCurrentUser()._id"
+            >
+              Profile
+            </a>
+            <a ngbDropdownItem routerLink="/logout"> Logout </a>
+          </div>
+        </div>
+        <div ngbDropdown class="d-inline-block" *ngIf="checkAdmin()">
+          <button type="button" class="btn" id="admin" ngbDropdownToggle>
+            Admin
+          </button>
+          <div ngbDropdownMenu aria-labelledby="admin">
+            <a ngbDropdownItem routerLink="/admin">Admin Dashboard</a>
+            <a ngbDropdownItem routerLink="/admin/order">View Orders</a>
+          </div>
+        </div>
+        <li class="nav-item">
+          <button class="btn btn-light" (click)="openSearch(searchModel)">
+            <i class="bi bi-search"></i>
+          </button>
+          <button
+            class="btn btn-light"
+            type="button"
+            (click)="openCart(cartCanvas)"
+          >
+            <i
+              class="bi h5"
+              [class]="
+                cartItem && cartItem.length ? 'bi-cart-check' : 'bi-cart-dash'
+              "
+            ></i>
+            <span
+              *ngIf="cartItem && cartItem.length"
+              class="badge text-bg-secondary ms-2"
+              >{{ totalCartItem() }}</span
+            >
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<ng-template #burgur let-offcanvas>
+  <div class="container">
+    <div class="offcanvas-header">
+      <h4 class="offcanvas-title" id="offcanvas-basic-title"></h4>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="offcanvas.dismiss()"
+      ></button>
+    </div>
+    <ul class="nav flex-column fs-2">
+      <li class="nav-item" *ngFor="let navItem of getNav()">
+        <a
+          class="nav-link"
+          [routerLink]="navItem.route"
+          (click)="offcanvas.dismiss()"
+          >{{ navItem.name }}</a
+        >
+      </li>
+      <div ngbDropdown class="d-inline-block" *ngIf="isLoggedIn()">
+        <button type="button" class="btn fs-2" ngbDropdownToggle>
+          Hello, {{ getCurrentUser().name.split(" ")[0] }}
+        </button>
+        <div ngbDropdownMenu aria-labelledby="admin">
+          <a
+            ngbDropdownItem
+            [routerLink]="'/profile/' + getCurrentUser()._id"
+            (click)="offcanvas.dismiss()"
+          >
+            Profile
+          </a>
+          <a ngbDropdownItem routerLink="/logout" (click)="offcanvas.dismiss()">
+            Logout
+          </a>
+        </div>
+      </div>
+      <div ngbDropdown class="d-inline-block" *ngIf="checkAdmin()">
+        <button type="button" class="btn fs-2" ngbDropdownToggle>Admin</button>
+        <div ngbDropdownMenu aria-labelledby="admin">
+          <a ngbDropdownItem routerLink="/admin" (click)="offcanvas.dismiss()">
+            Admin Dashboard
+          </a>
+          <a
+            ngbDropdownItem
+            routerLink="/admin/order"
+            (click)="offcanvas.dismiss()"
+          >
+            View Orders
+          </a>
+        </div>
+      </div>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #cartCanvas let-offcanvas>
+  <div class="offcanvas-header">
+    <h4 class="offcanvas-title" id="offcanvas-basic-title">Cart Detail</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="offcanvas.dismiss()"
+    ></button>
+  </div>
+  <div class="offcanvas-body pt-0" *ngIf="cartItem && cartItem.length">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item" *ngFor="let citem of cartItem">
+        <div class="d-flex">
+          <div class="cart-detail-img me-3">
+            <img [src]="citem.imageUrl" [alt]="citem.name" />
+          </div>
+          <div>
+            <div class="mb-3">
+              <p class="mb-0">
+                <strong>{{ citem.title }}</strong>
+              </p>
+              <small class="text-muted fw-light font-monospace">
+                {{ citem.price | currency }}
+              </small>
+            </div>
+            <div
+              class="btn-click d-flex justify-content-center align-items-center"
+              *ngIf="totalCartItem() > 0"
+            >
+              <span class="h3 btn btn-light btn-sm" (click)="reduceItem(citem)">
+                <i class="bi bi-dash"></i>
+              </span>
+              <small class="quantity mx-2 px-1 h6">
+                {{ citem.amount }}
+              </small>
+              <span class="h3 btn btn-light btn-sm" (click)="addItem(citem)">
+                <i class="bi bi-plus"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div
+    class="offcanvas-body d-flex flex-column justify-content-center align-items-center"
+    *ngIf="!cartItem || !cartItem.length"
+  >
+    <p class="text-center fs-3">Opps!</p>
+    <p class="text-center fs-5 text-muted">There is no item in your cart</p>
+    <img
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0Bil23yHFVzseITQ14PeXhz6p8nia6OzjUQ&usqp=CAU"
+      alt="No Item In Cart"
+    />
+  </div>
+  <div class="offcanvas-footer p-3" *ngIf="cartItem && cartItem.length">
+    <div class="my-3 mb-5">
+      <h4>
+        Total:
+        <span class="font-monospace">{{ totalAmount() | currency }}</span>
+      </h4>
+    </div>
+    <div class="d-grid checkout-btn">
+      <button class="btn btn-info" type="button" (click)="checkout(offcanvas)">
+        Checkout
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #searchModel let-modal>
+  <div class="modal-body">
+    <h3>Search</h3>
+    <div class="input-group flex-nowrap">
+      <input
+        id="search"
+        class="form-control"
+        type="search"
+        placeholder="Search..."
+        [(ngModel)]="searchText"
+        #search
+        required
+      />
+      <button class="btn btn-light" (click)="startSearch(modal)">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </div>
+</ng-template>

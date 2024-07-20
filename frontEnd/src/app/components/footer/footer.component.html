@@ -1,0 +1,51 @@
+<div class="px-2 pt-5 pb-3 px-sm-5 pt-sm-5 pb-sm-2 bg-dark footer">
+  <div class="container">
+    <div class="row mb-3">
+      <div class="col-6 col-md-2">
+        <p class="mb-2">
+          <a routerLink="/order-and-shipping">Orders & Shipping</a>
+        </p>
+        <p class="mb-2"><a routerLink="/delivery">Delivery</a></p>
+        <p class="mb-2"><a routerLink="/refund">Refunds</a></p>
+        <p class="mb-2">
+          <a routerLink="/privacy-and-policy">Privacy & Policy</a>
+        </p>
+      </div>
+      <div class="col-6 col-md-2">
+        <p class="mb-2"><a routerLink="/about"> About Us</a></p>
+        <p class="mb-2"><a routerLink="/contact">Help & Contact</a></p>
+        <p class="mb-2"><a routerLink="/faq">FAQs</a></p>
+        <p class="mb-2"><a routerLink="/promotion">Promotions</a></p>
+      </div>
+      <div class="col-12 col-md-3 col-md-4 mt-3 mt-md-0">
+        <p class="text-white-50 fs-5">Subscribe</p>
+        <div
+          class="d-flex justify-content-center align-items-center subscribe-input"
+        >
+          <input
+            type="text"
+            class="form-control mb-2 bg-dark text-white-50"
+            placeholder="Your email address"
+            [(ngModel)]="email"
+          />
+          <i class="bi bi-caret-right h4" (click)="subscribe()"></i>
+        </div>
+        <small class="text-muted">
+          By subscribing, you agree our Terms and Privacy Policy
+        </small>
+      </div>
+      <div class="col-12 col-md-4 col-md-4 mt-4 mt-md-0">
+        <p class="h3 text-center text-md-end contact-icons">
+          <a class="me-4 me-sm-3"><i class="bi bi-facebook"></i></a>
+          <a class="me-4 me-sm-3"><i class="bi bi-twitter"></i></a>
+          <a class="me-4 me-sm-3"><i class="bi bi-instagram"></i></a>
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <p class="text-center text-white-50 fs-6">
+        Copyright &copy; 2022 Everything Shop
+      </p>
+    </div>
+  </div>
+</div>
